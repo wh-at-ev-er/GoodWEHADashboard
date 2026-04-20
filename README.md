@@ -1,6 +1,3 @@
-# GoodWEHADashboard
-Dashboard for Home Assistant for GoodWE Invertor
-
 # GoodWe Home Assistant Dashboard
 
 A Home Assistant YAML dashboard for GoodWe solar, battery, grid import/export, and house consumption monitoring.
