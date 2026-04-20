@@ -14,6 +14,7 @@ A Home Assistant YAML dashboard for GoodWe solar, battery, grid import/export, a
 
 ## Screenshot
 ![Dashboard screenshot](docs/screenshot.png)
+![Dashboard screenshot](docs/screenshot2.png)
 
 ## Requirements
 This dashboard expects these entities to exist:
