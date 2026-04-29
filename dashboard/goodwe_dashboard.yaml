@@ -216,7 +216,7 @@ views:
         days_to_show: 180                                  
         period: month                                      
         stat_types:                                        
-          - sum                                            
+          - state                                            
         entities:                                          
           - entity: sensor.pv_energy_monthly               
             name: PV                                       
