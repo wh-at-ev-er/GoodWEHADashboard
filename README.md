@@ -28,7 +28,7 @@ The native GoodWe integration is the recommended starting point in Home Assistan
 
 ## Requirements
 
-- Home Assistant with the native **GoodWe** integration working correctly. [web:223]
+- Home Assistant with the native **GoodWe** integration working correctly.
 - A GoodWe inverter exposing the common live sensors such as:
   - `sensor.goodwe_pv_power`
   - `sensor.goodwe_pv1_power`
@@ -89,7 +89,7 @@ The native GoodWe integration is the recommended starting point in Home Assistan
 
 ### 1. Install the GoodWe integration
 
-Set up the native GoodWe integration in Home Assistant and confirm the inverter sensors are updating correctly. Home Assistant recommends the native integration for most users. [web:223][web:269]
+Set up the native GoodWe integration in Home Assistant and confirm the inverter sensors are updating correctly. Home Assistant recommends the native integration for most users.
 
 ### 2. Add the helper sensors
 
@@ -99,7 +99,7 @@ Add the following to your `configuration.yaml`.
 > - `sensor.goodwe_active_power` is used to split grid import/export.
 > - `sensor.goodwe_battery_power` is used to split battery charge/discharge.
 > - `sensor.goodwe_pv1_power` and `sensor.goodwe_pv2_power` are used to create panel-specific daily/monthly energy helpers.
-> - `unit_time: h` is included so the integration platform correctly converts W into kWh. [web:210]
+> - `unit_time: h` is included so the integration platform correctly converts W into kWh. 
 
 ```yaml
 template:
@@ -301,7 +301,7 @@ utility_meter:
 
 ### 3. Restart Home Assistant
 
-After adding the YAML, do a full Home Assistant restart so the new template, integration, and utility meter entities are created. YAML utility meter entities often need a full restart before they appear correctly. [web:201]
+After adding the YAML, do a full Home Assistant restart so the new template, integration, and utility meter entities are created. YAML utility meter entities often need a full restart before they appear correctly. 
 
 ### 4. Add the dashboard
 
@@ -310,12 +310,12 @@ Copy the dashboard YAML from this repository into a manual Lovelace dashboard or
 ## Dashboard notes
 
 - The dashboard uses the **original layout** with corrected sensor sources.
-- Grid import/export and battery charge/discharge are based on split helper sensors because GoodWe exposes these as signed power values rather than separate positive-only entities. [web:112][web:270]
-- `pv1_energy_daily`, `pv1_energy_monthly`, `pv2_energy_daily`, and `pv2_energy_monthly` are custom helpers added so the front/back panel labels remain accurate in the dashboard. [web:210][web:201]
+- Grid import/export and battery charge/discharge are based on split helper sensors because GoodWe exposes these as signed power values rather than separate positive-only entities. 
+- `pv1_energy_daily`, `pv1_energy_monthly`, `pv2_energy_daily`, and `pv2_energy_monthly` are custom helpers added so the front/back panel labels remain accurate in the dashboard. 
 
 ## Statistics graph fix
 
-For the daily and monthly statistics cards, use `stat_types: state` rather than `sum`. Daily utility meter sensors can otherwise appear as cumulative totals across days and show inflated axes. This behavior has been reported by Home Assistant users working with utility meter and statistics graphs. [web:174][web:181]
+For the daily and monthly statistics cards, use `stat_types: state` rather than `sum`. Daily utility meter sensors can otherwise appear as cumulative totals across days and show inflated axes. This behavior has been reported by Home Assistant users working with utility meter and statistics graphs.
 
 Example:
 
@@ -332,21 +332,21 @@ Example:
 ## Troubleshooting
 
 ### PV totals are missing
-Check for typos in the integration source entity. For example, `sensor.goodwee_pv_power` is incorrect; it must be `sensor.goodwe_pv_power`. If the source entity is wrong, `pv_power_sum`, `pv_energy_daily`, and `pv_energy_monthly` will not work. [web:210]
+Check for typos in the integration source entity. For example, `sensor.goodwee_pv_power` is incorrect; it must be `sensor.goodwe_pv_power`. If the source entity is wrong, `pv_power_sum`, `pv_energy_daily`, and `pv_energy_monthly` will not work. 
 
 ### Cards show "Entity not found"
 This usually means:
 - the helper entities were not created yet
 - Home Assistant has not been restarted after editing YAML
-- the dashboard is referencing an entity name that no longer exists after reinstall [web:201]
+- the dashboard is referencing an entity name that no longer exists after reinstall
 
 ### Cards show `Unknown`
-This usually means the entity exists but has not produced valid data yet, or a source sensor upstream is unavailable. [web:201]
+This usually means the entity exists but has not produced valid data yet, or a source sensor upstream is unavailable.
 
 ### Panel day/month labels are wrong
-If `pv1_energy_daily`, `pv1_energy_monthly`, `pv2_energy_daily`, and `pv2_energy_monthly` are missing, the dashboard can only show live PV1/PV2 power, not daily/monthly kWh. The extra PV1/PV2 helpers in this project solve that. [web:210][web:201]
+If `pv1_energy_daily`, `pv1_energy_monthly`, `pv2_energy_daily`, and `pv2_energy_monthly` are missing, the dashboard can only show live PV1/PV2 power, not daily/monthly kWh. The extra PV1/PV2 helpers in this project solve that.
 
 ## Credits
 
-- Native GoodWe integration for Home Assistant. [web:223]
-- Community approaches for GoodWe Energy Dashboard helper sensors and split import/export or charge/discharge entities. [web:112][web:270]
+- Native GoodWe integration for Home Assistant.
+- Community approaches for GoodWe Energy Dashboard helper sensors and split import/export or charge/discharge entities.
