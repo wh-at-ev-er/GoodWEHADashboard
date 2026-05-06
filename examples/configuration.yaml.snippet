@@ -1,3 +1,199 @@
+template:
+  - sensor:
+      - name: "Energy Buy"
+        unique_id: energy_buy
+        device_class: power
+        state_class: measurement
+        unit_of_measurement: "W"
+        state: >
+          {% if states('sensor.goodwe_active_power')|float(0) < 0%}
+            {{ states('sensor.goodwe_active_power')|float(0) * -1 }}
+          {% else %}
+            0
+          {% endif %}
+        availability: "{{ states('sensor.goodwe_active_power') not in ['unknown', 'unavailable'] }}"
+
+      - name: "Energy Sell"
+        unique_id: energy_sell
+        device_class: power
+        state_class: measurement
+        unit_of_measurement: "W"
+        state: >
+          {% if states('sensor.goodwe_active_power')|float(0) > 0%}
+            {{ states('sensor.goodwe_active_power')|float(0) }}
+          {% else %}
+            0
+          {% endif %}
+        availability: "{{ states('sensor.goodwe_active_power') not in ['unknown', 'unavailable'] }}"
+
+      - name: "Energy Battery Charge"
+        unique_id: energy_battery_charge
+        device_class: power
+        state_class: measurement
+        unit_of_measurement: "W"
+        state: >
+          {% if states('sensor.goodwe_battery_power')|float(0) < 0%}
+            {{ states('sensor.goodwe_battery_power')|float(0) * -1 }}
+          {% else %}
+            0
+          {% endif %}
+        availability: "{{ states('sensor.goodwe_battery_power') not in ['unknown', 'unavailable'] }}"
+
+      - name: "Energy Battery Discharge"
+        unique_id: energy_battery_discharge
+        device_class: power
+        state_class: measurement
+        unit_of_measurement: "W"
+        state: >
+          {% if states('sensor.goodwe_battery_power')|float(0) > 0%}
+            {{ states('sensor.goodwe_battery_power')|float(0) }}
+          {% else %}
+            0
+          {% endif %}
+        availability: "{{ states('sensor.goodwe_battery_power') not in ['unknown', 'unavailable'] }}"
+
+      - name: "House Consumption"
+        unique_id: house_consumption
+        device_class: power
+        state_class: measurement
+        unit_of_measurement: "W"
+        state: >
+          {{
+            (states('sensor.goodwe_pv_power')|float(0))
+            + (states('sensor.energy_buy')|float(0))
+            + (states('sensor.energy_battery_discharge')|float(0))
+            - (states('sensor.energy_sell')|float(0))
+            - (states('sensor.energy_battery_charge')|float(0))
+          }}
+        availability: >
+          {{ states('sensor.goodwe_pv_power') not in ['unknown', 'unavailable']
+             and states('sensor.energy_buy') not in ['unknown', 'unavailable']
+             and states('sensor.energy_battery_discharge') not in ['unknown', 'unavailable']
+             and states('sensor.energy_sell') not in ['unknown', 'unavailable']
+             and states('sensor.energy_battery_charge') not in ['unknown', 'unavailable'] }}
+
+sensor:
+  - platform: integration
+    source: sensor.energy_buy
+    name: energy_buy_sum
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+
+  - platform: integration
+    source: sensor.energy_sell
+    name: energy_sell_sum
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+
+  - platform: integration
+    source: sensor.energy_battery_charge
+    name: energy_battery_charge_sum
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+
+  - platform: integration
+    source: sensor.energy_battery_discharge
+    name: energy_battery_discharge_sum
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+
+  - platform: integration
+    source: sensor.goodwe_pv_power
+    name: pv_power_sum
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+
+  - platform: integration
+    source: sensor.house_consumption
+    name: house_consumption_sum
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+
+  - platform: integration
+    source: sensor.goodwe_pv1_power
+    name: pv1_energy_sum
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+
+  - platform: integration
+    source: sensor.goodwe_pv2_power
+    name: pv2_energy_sum
+    unit_prefix: k
+    unit_time: h
+    round: 2
+    method: left
+
+utility_meter:
+  energy_buy_daily:
+    source: sensor.energy_buy_sum
+    cycle: daily
+  energy_buy_monthly:
+    source: sensor.energy_buy_sum
+    cycle: monthly
+
+  energy_sell_daily:
+    source: sensor.energy_sell_sum
+    cycle: daily
+  energy_sell_monthly:
+    source: sensor.energy_sell_sum
+    cycle: monthly
+
+  house_consumption_daily:
+    source: sensor.house_consumption_sum
+    cycle: daily
+  house_consumption_monthly:
+    source: sensor.house_consumption_sum
+    cycle: monthly
+
+  energy_battery_charge_daily:
+    source: sensor.energy_battery_charge_sum
+    cycle: daily
+  energy_battery_charge_monthly:
+    source: sensor.energy_battery_charge_sum
+    cycle: monthly
+
+  energy_battery_discharge_daily:
+    source: sensor.energy_battery_discharge_sum
+    cycle: daily
+  energy_battery_discharge_monthly:
+    source: sensor.energy_battery_discharge_sum
+    cycle: monthly
+
+  pv_energy_daily:
+    source: sensor.pv_power_sum
+    cycle: daily
+  pv_energy_monthly:
+    source: sensor.pv_power_sum
+    cycle: monthly
+
+  pv1_energy_daily:
+    source: sensor.pv1_energy_sum
+    cycle: daily
+  pv1_energy_monthly:
+    source: sensor.pv1_energy_sum
+    cycle: monthly
+
+  pv2_energy_daily:
+    source: sensor.pv2_energy_sum
+    cycle: daily
+  pv2_energy_monthly:
+    source: sensor.pv2_energy_sum
+    cycle: monthly
+
 lovelace:
   mode: storage
   dashboards:
